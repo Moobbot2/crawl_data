@@ -49,16 +49,21 @@ def crawl_data(url, base_url, visited_urls=set(), max_redirects=5, page_priority
                     if parsed_url.netloc == urlparse(base_url).netloc:
                         # Check if the URL hasn't been visited to avoid infinite loops
                         if absolute_url not in visited_urls:
-                            print(link_title, ':', absolute_url,
-                                  '- page_priority:', page_priority)
-
                             # Round page_priority to 2 decimal places
                             page_priority = round(page_priority, 2)
+
+                            current_priority = page_priority
+
+                            # If base_url corresponds to an image or file, set priority to 0.3
+                            if any(image_extension in absolute_url.lower() for image_extension in ['.jpg', '.jpeg', '.png', '.gif']):
+                                current_priority = 0.3
+                            print(link_title, ':', absolute_url,
+                                  '- page_priority:', current_priority)
 
                             size_map.append({
                                 'loc': absolute_url,
                                 'lastmod': lastmod_time,
-                                'priority': page_priority  # Set priority value
+                                'priority': current_priority  # Set priority value
                             })
                             visited_urls.add(absolute_url)
 

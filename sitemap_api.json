@@ -82,17 +82,17 @@
   {
     "loc": "https://cvgmall.com/upload/image/PRODUCT/1-37.jpg",
     "lastmod": "2023-12-08",
-    "priority": 1.0
+    "priority": 0.3
   },
   {
     "loc": "https://cvgmall.com/upload/image/PRODUCT/2-36.jpg",
     "lastmod": "2023-12-08",
-    "priority": 0.9
+    "priority": 0.3
   },
   {
     "loc": "https://cvgmall.com/upload/image/PRODUCT/3-30.jpg",
     "lastmod": "2023-12-08",
-    "priority": 0.8
+    "priority": 0.3
   },
   {
     "loc": "https://cvgmall.com/#tab-description",
@@ -285,6 +285,11 @@
     "priority": 0.3
   },
   {
+    "loc": "https://cvgmall.com/privacy-policy",
+    "lastmod": "2023-12-08",
+    "priority": 0.3
+  },
+  {
     "loc": "https://cvgmall.com/refund-and-returns-policy",
     "lastmod": "2023-12-08",
     "priority": 0.3
@@ -296,11 +301,6 @@
   },
   {
     "loc": "https://cvgmall.com/order-tracking",
-    "lastmod": "2023-12-08",
-    "priority": 0.3
-  },
-  {
-    "loc": "https://cvgmall.com/privacy-policy",
     "lastmod": "2023-12-08",
     "priority": 0.3
   },
@@ -320,12 +320,12 @@
     "priority": 0.3
   },
   {
-    "loc": "https://cvgmall.com/buying-cheap-used-transmissions-isn-t-as-risky-as-you-think",
+    "loc": "https://cvgmall.com/does-toyota-really-make-the-most-reliable-engines",
     "lastmod": "2023-12-08",
     "priority": 0.3
   },
   {
-    "loc": "https://cvgmall.com/does-toyota-really-make-the-most-reliable-engines",
+    "loc": "https://cvgmall.com/buying-cheap-used-transmissions-isn-t-as-risky-as-you-think",
     "lastmod": "2023-12-08",
     "priority": 0.3
   },
@@ -342,16 +342,16 @@
   {
     "loc": "https://cvgmall.com/upload/image/PRODUCT/1-36.jpg",
     "lastmod": "2023-12-08",
-    "priority": 0.9
+    "priority": 0.3
   },
   {
     "loc": "https://cvgmall.com/upload/image/PRODUCT/2-35.jpg",
     "lastmod": "2023-12-08",
-    "priority": 0.8
+    "priority": 0.3
   },
   {
     "loc": "https://cvgmall.com/upload/image/PRODUCT/3-29.jpg",
     "lastmod": "2023-12-08",
-    "priority": 0.7
+    "priority": 0.3
   }
 ]
