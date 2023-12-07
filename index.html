@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jquery.js"></script>
+</head>
+
+<body>
+    <div class="" style="width: 100vw; min-height: 100vh; display: flex;">
+        <form action="" id="form_craw" style="width: 50%;">
+            <input type="url" placeholder="Ex: https://cvgmall.com">
+            <button type="submit">Get data</button>
+        </form>
+        <div style="width: 50%; background-color: aquamarine;">
+            <pre id="json_test"></pre>
+            <span class="error_text" style="color: red; font-size: 18px;"></span>
+        </div>
+    </div>
+
+    <script>
+        var json_test = $('#json_test');
+        var form_craw = $('#form_craw');  // Use jQuery selector
+
+        // Define the API URL
+        const apiUrl = 'http://127.0.0.1:5000/api_crawl_data';  // Add 'http://' to the URL
+
+        form_craw.submit(function (e) {
+            e.preventDefault();  // Prevent the default form submission
+            let url = form_craw.find('input[type="url"]').val();  // Get the input value
+            json_test.html('Crawldata start! Please wait');
+            $.ajax({
+                type: "POST",
+                url: apiUrl,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({
+                    link_craw: url,
+                }),
+                success: function (response) {
+                    json_test.html(JSON.stringify(response.size_map, null, 2));
+                    console.log('Response:', response.message);
+                },
+                error: function (error) {
+                    $('.error_text').html(error.responseText);
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

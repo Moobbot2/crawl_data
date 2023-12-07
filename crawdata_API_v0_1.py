@@ -31,6 +31,9 @@ def crawl_data(url, base_url, visited_urls=set(), max_redirects=5, page_priority
             # For example, let's extract all the links on the page
             links = soup.find_all('a')
 
+            # Round page_priority to 2 decimal places
+            page_priority = round(page_priority, 2)
+
             for link in links:
                 link_href = link.get('href')
                 link_title = link.get('title')
@@ -47,7 +50,7 @@ def crawl_data(url, base_url, visited_urls=set(), max_redirects=5, page_priority
                         # Check if the URL hasn't been visited to avoid infinite loops
                         if absolute_url not in visited_urls:
                             print(link_title, ':', absolute_url,
-                                  'page_priority:', page_priority)
+                                  '- page_priority:', page_priority)
 
                             # Round page_priority to 2 decimal places
                             page_priority = round(page_priority, 2)
@@ -60,9 +63,12 @@ def crawl_data(url, base_url, visited_urls=set(), max_redirects=5, page_priority
                             visited_urls.add(absolute_url)
 
                             # Recursively crawl the linked page with decreased priority
-                            crawl_data(absolute_url, base_url, visited_urls,
-                                       max_redirects=max_redirects, page_priority=page_priority - 0.1)
+                            crawl_data(absolute_url, base_url, page_priority=page_priority, visited_urls=visited_urls,
+                                       max_redirects=max_redirects)
 
+                            # Decrease page_priority by 0.1 for subsequent links on the same page
+                            if page_priority > 0.3:
+                                page_priority -= 0.1
         else:
             print(
                 f"Failed to fetch the page. Status code: {response.status_code}")
