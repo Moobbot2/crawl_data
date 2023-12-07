@@ -8,6 +8,7 @@ from datetime import date
 import requests
 import json
 import traceback
+import xml.etree.ElementTree as ET
 
 size_map = []
 lastmod_time = date.today().strftime('%Y-%m-%d')  # Convert date to string
@@ -56,24 +57,25 @@ def crawl_data(url, base_url, visited_urls=set(), max_redirects=5, page_priority
 
                             # If base_url corresponds to an image or file, set priority to 0.3
                             if any(image_extension in absolute_url.lower() for image_extension in ['.jpg', '.jpeg', '.png', '.gif']):
-                                current_priority = 0.3
-                            print(link_title, ':', absolute_url,
-                                  '- page_priority:', current_priority)
+                                continue
+                            else:
+                                print(link_title, ':', absolute_url,
+                                      '- page_priority:', current_priority)
 
-                            size_map.append({
-                                'loc': absolute_url,
-                                'lastmod': lastmod_time,
-                                'priority': current_priority  # Set priority value
-                            })
-                            visited_urls.add(absolute_url)
+                                size_map.append({
+                                    'loc': absolute_url,
+                                    'lastmod': lastmod_time,
+                                    'priority': current_priority  # Set priority value
+                                })
+                                visited_urls.add(absolute_url)
 
-                            # Recursively crawl the linked page with decreased priority
-                            crawl_data(absolute_url, base_url, page_priority=page_priority, visited_urls=visited_urls,
-                                       max_redirects=max_redirects)
+                                # Recursively crawl the linked page with decreased priority
+                                crawl_data(absolute_url, base_url, page_priority=page_priority, visited_urls=visited_urls,
+                                           max_redirects=max_redirects)
 
-                            # Decrease page_priority by 0.1 for subsequent links on the same page
-                            if page_priority > 0.3:
-                                page_priority -= 0.1
+                                # Decrease page_priority by 0.1 for subsequent links on the same page
+                                if page_priority > 0.3:
+                                    page_priority -= 0.1
         else:
             print(
                 f"Failed to fetch the page. Status code: {response.status_code}")
@@ -86,6 +88,29 @@ def crawl_data(url, base_url, visited_urls=set(), max_redirects=5, page_priority
 
     # Return size_map after crawling is complete
     return size_map
+
+
+def convert_to_xml(size_map):
+    root = ET.Element("urlset")
+    root.set("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9")
+    root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+    root.set("xsi:schemaLocation",
+             "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd")
+
+    for entry in size_map:
+        url_element = ET.SubElement(root, "url")
+
+        loc_element = ET.SubElement(url_element, "loc")
+        loc_element.text = entry['loc']
+
+        lastmod_element = ET.SubElement(url_element, "lastmod")
+        lastmod_element.text = entry['lastmod']
+
+        priority_element = ET.SubElement(url_element, "priority")
+        priority_element.text = str(entry['priority'])
+
+    tree = ET.ElementTree(root)
+    return tree
 
 
 class ApiCrawlData(Resource):
@@ -110,8 +135,13 @@ class ApiCrawlData(Resource):
                 "size_map": size_map
             }
             # Save the sitemap to a JSON file
-            with open('sitemap_api.json', 'w', encoding='utf-8') as json_file:
-                json.dump(size_map, json_file, ensure_ascii=False, indent=2)
+            # with open('sitemap_api.json', 'w', encoding='utf-8') as json_file:
+            #     json.dump(size_map, json_file, ensure_ascii=False, indent=2)
+            # Convert size_map to XML
+            tree = convert_to_xml(size_map)
+
+            # Save the XML to a file
+            tree.write("sitemap.xml", encoding="utf-8", xml_declaration=True)
 
             return Response(json.dumps(response_data), content_type='application/json')
         except Exception as e:
